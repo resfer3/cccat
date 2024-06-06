@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <stddef.h>
-#include <sys/types.h>
+#include <stdlib.h>
+
 
 int main(int argc, char *argv[]){
 
@@ -9,11 +9,17 @@ int main(int argc, char *argv[]){
         printf("Usage: ./cccat file\n"); 
         return 1;
     }
+   /* if (argv[1]){
+
+        printf("%s\n", argv[1]);
+    }*/
+
 
     //open file from command-line argument
     FILE *file = fopen(argv[1], "r"); 
     if (file == NULL){
-        printf("Couldn't find file\n");
+    //if file is null, read from standard in
+        printf("Couldn't find stdin\n");
         return 1;
     }
 
@@ -24,9 +30,11 @@ int main(int argc, char *argv[]){
     while ((read = getline(&line, &len, file))!= -1){
     
         //printf("Success\n");
+        printf("line of length %zu : \n", read);
         printf("%s", line);
 
     }
+    free(file);
     
 
 }
