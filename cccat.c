@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <limits.h>
 
 #define BUFFERSIZE 128
 
-int isBlank (char *line);
+
+int printFile(char *filename, FILE** read_file);
 
 int main(int argc, char *argv[]){
 
@@ -15,89 +15,52 @@ int main(int argc, char *argv[]){
         return 1;
     }
    
-
     FILE *input;
-    /*
-    (if (argv[1] == "-"){
-       input = popen("!!", "r");
-       if (input == NULL){
-            printf("stdin Not Found\n");
-            return 1;
-       } else {
-
-            while(fgets(path, sizeof(path), input) != NULL){
-                printf("%s", path);
-            }
-       }
-    }
-    else {
-        input = fopen(argv[1], "r");
-        if (input == NULL){
-        //if file is null, read from standard in
-            printf("Couldn't find file\n");
-            return 1;
-        }    
-    }
-    */
-    // if argv[1] is file; declare file
-    // else argv[1] is -; declare stdin
-    if (argv[1] == "-"){
-        
-    }
-    else{
-        input = fopen(argv[1], "r");
-    }
-
 
     //NOTE TO SELF: 07/06
     //MAKE THE BELOW CODE TO A FUNCTION TO WRITE TO STDOUT
     //SO IT WILL BE ABLE TO GET MORE DIVERSE OUTPUTS
+    
+    char *std = NULL;
+    size_t len2 = 0;
+    ssize_t read;
+    
+    printFile(argv[1], &input);
 
-
+    while ((read = getline(&std, &len2, stdin)) != -1){
+        printf("%s", std);
+    }
+    
 
 
     
     //write contents to stdout
-    char *line = NULL;
-    size_t len = 0;
-    ssize_t read;
-    while ((read = getline(&line, &len, input))!= -1){
-    
-        //printf("Success\n");
-        printf("line of length %zu : \n", read);
-        printf("%s", line);
-
-    }
-    fclose(input);
     return 0;    
 
 }
 
-/*
-// not needed
-// return nonzero if line is a string containing only whitespaces, -1 otherwise
-int isBlank (char *line){
-    char *tmp;
-    int is_blank = -1;
-    // Loop through each character
-    for (tmp = line; *tmp != '\0'; ++tmp){
-        if(!isspace(*tmp)){
-        // Found a non-whitespace character
-        is_blank = 0;
-        break;
-        }
+int printFile(char *filename, FILE **read_file){
+    //read from command line
+    //print file
+    
+    //declare
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+
+    *read_file = fopen(filename, "r");
+    if(*read_file == NULL){
+        return 1;
     }
-
-    return is_blank;
+    while ((read = getline(&line, &len, *read_file)) != -1){
+        printf("%s", line);
+    }
+    if (*read_file != NULL){
+        fclose(*read_file);
+    }
+    exit(0);
+    return 0;
 }
-*/
-
-
-
-
-
-
-
 
 
 
