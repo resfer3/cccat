@@ -34,6 +34,7 @@ int main(int argc, char *argv[]){
     ssize_t read;
     
 
+    // if -, print stdin
     if (strcmp(data[1], "-") == 0){
 
         while ((read = getline(&std, &len2, stdin)) != -1){
@@ -41,6 +42,18 @@ int main(int argc, char *argv[]){
         }
         return 0;
     }
+    // if -n, print stdin with numbers
+    else if (strcmp(data[1], "-n") == 0){
+        int index = 0; 
+        while ((read = getline(&std, &len2, stdin)) != -1){
+            index++;
+            printf("%i ", index);
+            printf("%s", std);
+        }
+        return 0;
+
+    }
+    // if files, output files
     else if (data[1] != NULL || data[2] != NULL){
 
         printFile(data[1], &input);
