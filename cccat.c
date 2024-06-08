@@ -11,8 +11,7 @@ int printFile(char *filename, FILE** read_file);
 int main(int argc, char *argv[]){
 
     //err handling
-    if (argc > 3){
-        printf("Usage: ./cccat file\n"); 
+    if (argc > 3 || argc < 0){
         return 1;
     }
    
@@ -28,11 +27,12 @@ int main(int argc, char *argv[]){
     //NOTE TO SELF: 07/06
     //MAKE THE BELOW CODE TO A FUNCTION TO WRITE TO STDOUT
     //SO IT WILL BE ABLE TO GET MORE DIVERSE OUTPUTS
+    //-> DONE
     
     char *std = NULL;
     size_t len2 = 0;
     ssize_t read;
-    
+    int index = 0;
 
     // if -, print stdin
     if (strcmp(data[1], "-") == 0){
@@ -42,9 +42,26 @@ int main(int argc, char *argv[]){
         }
         return 0;
     }
+    // if -b, exclude numbers in lines without text
+    else if (strcmp(data[1], "-b") == 0){
+        index = 0; 
+        while ((read = getline(&std, &len2, stdin)) != -1){
+            index++;
+            if (read == 1){
+                index--;
+                printf("\n");
+                continue;
+            }
+            printf("%i ", index);
+            printf("%s", std);
+        }
+        return 0;
+
+
+    }
     // if -n, print stdin with numbers
     else if (strcmp(data[1], "-n") == 0){
-        int index = 0; 
+        index = 0; 
         while ((read = getline(&std, &len2, stdin)) != -1){
             index++;
             printf("%i ", index);
@@ -60,11 +77,6 @@ int main(int argc, char *argv[]){
         printFile(data[2], &input2);
     
     }
-    
-
-
-    //free(data); 
-    //write contents to stdout
     return 0;    
 
 }
@@ -90,20 +102,3 @@ int printFile(char *filename, FILE **read_file){
     }
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
